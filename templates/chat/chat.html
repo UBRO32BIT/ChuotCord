@@ -18,7 +18,7 @@
 
 <script type="text/javascript">
     var roomCode = document.getElementById("chat-room").getAttribute("room_code")
-    let url = 'ws://' + window.location.host + '/ws/chat/' + roomCode
+    let url = 'wss://' + window.location.host + '/ws/chat/' + roomCode
     const chatSocket = new WebSocket(url)
 
     chatSocket.onmessage = function(e) {
