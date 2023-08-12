@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-n@h%+ryjd#%!u$t)_6il!!0)-*oh7xnpdzia_$k$ngqzse2nrz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '27.77.78.138']
 
 # Application definition
 
@@ -83,13 +83,26 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+} """
 
+DATABASES = {   
+    'default': {   
+        'ENGINE': 'django.db.backends.mysql',   
+        'NAME': 'chuot_cord',   
+        'USER': 'root',   
+        'PASSWORD': 'ratheadquarters!',   
+        'HOST': '2.tcp.eu.ngrok.io',   
+        'PORT': '16297',   
+        'OPTIONS': {   
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"   
+        }   
+    }   
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -115,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bangkok'
 
 USE_I18N = True
 
