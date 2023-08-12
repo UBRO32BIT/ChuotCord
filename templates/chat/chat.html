@@ -1,0 +1,43 @@
+{% extends 'chat/base.html' %}
+{% block content %}
+<div id="chat-room" room_code={{group.id}}>
+    <div class="my-3 mx-3 border-bottom border-danger-subtle">
+        <h3>{{group.name}}</h3>
+    </div>
+    <div id="messages" class="mx-2 pb-5">
+        {% for message in messages %}
+        {% include 'chat/message/message.html' %}
+        {% endfor %}
+    </div>
+    <form id="form" class="custom-form mt-4 pt-2 mb-lg-0 fixed-bottom" role="search">
+        <div class="input-group input-group-lg">
+            <input name="message" type="text" class="form-control" placeholder="Message {{group.name}}" aria-label="Search">
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var roomCode = document.getElementById("chat-room").getAttribute("room_code")
+    let url = 'ws://' + window.location.host + '/ws/chat/' + roomCode
+    const chatSocket = new WebSocket(url)
+
+    chatSocket.onmessage = function(e) {
+        let data = JSON.parse(e.data)
+        console.log('Data: ', data)
+
+        if (data.type === 'chat') {
+            let messages = document.getElementById('messages')
+            messages.insertAdjacentHTML('beforeend', `{% include 'chat/message/message-append.html' %}`)
+        }
+    }
+    let form = document.getElementById('form')
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let message = e.target.message.value
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }))
+        form.reset()
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'chat/base.html' %}
+{% block content %}
+<div class="">
+    <h3>ChuotCord</h3>
+</div>
+<div class="">
+    <div class="text-center">
+        <h4>Your chat rooms</h4>
+    </div>
+    {% for group in groups.all %}
+    <a href="chat/{{group.group.id}}">{{group.group.name}}</a>
+    {% endfor %}
+</div>
+{% endblock %}
