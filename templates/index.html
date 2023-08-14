@@ -1,14 +1,26 @@
 {% extends 'chat/base.html' %}
 {% block content %}
-<div class="">
+<div class="py-2">
     <h3>ChuotCord</h3>
 </div>
-<div class="">
-    <div class="text-center">
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    <div class="text-center m-3">
         <h4>Your chat rooms</h4>
     </div>
     {% for group in groups.all %}
-    <a href="chat/{{group.group.id}}">{{group.group.name}}</a>
+    <div class="py-3">
+        <a href="chat/{{group.group.id}}" class="text-decoration-none text-info">
+            <h4>{{group.group.name}}</h4>
+        </a>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
