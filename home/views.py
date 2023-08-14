@@ -6,7 +6,9 @@ def index(request):
     if request.user.is_authenticated:
         user = request.user
         groups = GroupUser.objects.filter(member_id=user.id)
-        context = {"groups": groups}
+        context = {
+            "groups": groups
+            }
         return render(request, "index.html", context)
     else:
         # Handle the case when the user is not authenticated

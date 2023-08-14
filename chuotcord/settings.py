@@ -16,6 +16,14 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# DELETE THIS LINE IN PRODUCTION
+import environ
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+#DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,7 +34,7 @@ SECRET_KEY = 'django-insecure-n@h%+ryjd#%!u$t)_6il!!0)-*oh7xnpdzia_$k$ngqzse2nrz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '27.77.78.138']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '27.77.78.138', '192.168.1.165']
 
 # Application definition
 
@@ -73,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
 
 

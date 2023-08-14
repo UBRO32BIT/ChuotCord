@@ -1,7 +1,9 @@
 import json
+import pytz
+from datetime import datetime
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import MessageGroup, Group, GroupUser
+from .models import MessageGroup, Group
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
@@ -42,14 +44,24 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         if (True):
             message_object = MessageGroup(member=self.user, group=group, content=message)
             await self.save_message(message_object)
+            # Get the UTC time zone
+            utc_timezone = pytz.timezone('UTC')
+            
+            # Convert the created_at timestamp to UTC
+            created_at_utc = message_object.created_at.astimezone(utc_timezone)
+            
+            # Convert the UTC timestamp to the desired time zone
+            desired_timezone = pytz.timezone('Asia/Bangkok')  # Replace with your desired time zone
+            created_at_desired_timezone = created_at_utc.astimezone(desired_timezone)
+            
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type':'chat_message',
                     'username': self.user.username,
-                    'created_at': message_object.created_at.strftime('%d-%m-%Y, %H:%M:%S'),
+                    'created_at': created_at_desired_timezone.strftime('%d-%m-%Y, %H:%M:%S'),
                     'message':message
                 }
             )
-        print("Message: ", message)
+        print("Message: ", message, " ", message_object.created_at)
 
