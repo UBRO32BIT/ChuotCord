@@ -1,22 +1,50 @@
-{% extends '../chat/base.html' %}
-
+{% extends 'authentication/base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-<form method="POST" novalidate>
-	{% csrf_token %}
-	<h2>Sign Up</h2>
-		
-	{% for field in form %}
-	<p>
-		{% if field.errors %}
-		<ul class="errorlist">
-			{% for error in field.errors %}
-			<li>{{ error }}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	 	{{ field.label_tag }} {{ field }}
-	</p>
-	{% endfor %}
-	<input type="submit" value="Register" />
-</form>
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <div class="row">
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="m-0"></div>
+                            {% endif %}
+                        </div>
+                        <form class="mb-md-0 mt-md-4 pb-5" method="POST">
+                            {% csrf_token %}
+                            <h2 class="fw-bold mb-5 text-uppercase">Create an account</h2>
+                            <div class="form-group form-outline form-white mb-4">
+                                {% render_field form.username type="text" class="form-control" placeholder="Username" %}
+                            </div>
+
+							<div class="form-group form-outline form-white mb-4">
+                                {% render_field form.email type="email" class="form-control" placeholder="Email address" %}
+                            </div>
+
+                            <div class="form-group form-outline form-white mb-4">
+                                {% render_field form.password1 type="password" class="form-control" placeholder="Password" %}
+                            </div>
+
+							<div class="form-group form-outline form-white mb-4">
+                                {% render_field form.password2 type="password" class="form-control" placeholder="Retype password" %}
+                            </div>
+
+                            <button class="btn btn-outline-light btn-lg px-5" type="submit" value="Submit">Sign up</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

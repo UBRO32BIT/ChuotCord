@@ -22,10 +22,10 @@ def sign_in(request):
             return redirect(index)
         else:
             messages.success(request, ("There was an error while logging, please try again!"))
-            return redirect('sign_in')
+            return redirect('login')
     else:
         form_login = LoginForm()
-        return render(request, 'authentication/login.html', {'form_login': form_login})
+        return render(request, 'authentication/login.html', {'form': form_login})
 
 @user_passes_test(check_if_not_authenticated)
 def sign_up(request):

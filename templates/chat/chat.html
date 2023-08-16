@@ -33,7 +33,7 @@
 </div>
 
 <script type="text/javascript">
-    var ws_scheme = window.location.protocol === "https" ? "wss" : "ws";
+    var ws_scheme = "wss";//window.location.protocol === "https" ? "wss" : "ws";
     var roomCode = document.getElementById("chat-room").getAttribute("room_code")
     let url = ws_scheme + '://' + window.location.host + '/ws/chat/' + roomCode
     const chatSocket = new WebSocket(url)
