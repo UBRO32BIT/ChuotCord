@@ -20,20 +20,27 @@
             <form id="form" class="custom-form" role="search">
                 <div class="input-group input-group-lg">
                     <input name="message" type="text" class="form-control" placeholder="Message {{group.name}}" aria-label="Search">
+                    <input type="file" name="image" accept="image/*">
                 </div>
             </form>
         </div>
         <div class="col-lg-2 d-none d-lg-inline-block border-secondary border-start">
-            <h5>Members</h5>
-            {% for member in members %}
-            <p>{{member.member.username}}</p>
-            {% endfor %}
+            <div class="pt-3">
+                <h5>Onlines</h5>
+                <div id="onlines"></div>
+            </div>
+            <div class="">
+                <h5>Members</h5>
+                {% for member in members %}
+                <p>{{member.member.username}}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var ws_scheme = "wss";//window.location.protocol === "https" ? "wss" : "ws";
+    var ws_scheme = window.location.protocol === "https" ? "wss" : "ws";
     var roomCode = document.getElementById("chat-room").getAttribute("room_code")
     let url = ws_scheme + '://' + window.location.host + '/ws/chat/' + roomCode
     const chatSocket = new WebSocket(url)
@@ -48,16 +55,49 @@
             anchor.insertAdjacentHTML('beforebegin', `{% include 'chat/message/message-append.html' %}`);
             scrollToBottom();
         }
+        if (data.type === 'player_connect') {
+            let div = document.getElementById('onlines')
+            div.innerHTML = '';
+            for (var online of data.message) {
+                div.insertAdjacentHTML('beforeend', `<p>${online}</p>`);
+            }
+        }
     }
     let form = document.getElementById('form')
-    form.addEventListener('submit', (e) => {
-        e.preventDefault()
-        let message = e.target.message.value
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }))
-        form.reset()
-    })
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let messageInput = e.target.message;
+        let message = messageInput.value;
+
+        // Get the selected image file
+        let imageInput = e.target.image;
+        let imageFile = imageInput.files[0];
+
+        // Check if a file is selected
+        if (imageInput.files.length > 0) {
+            const reader = new FileReader();
+
+            reader.onload = (loadEvent) => {
+                const base64Image = loadEvent.target.result;
+                // Send both text and image
+                chatSocket.send(JSON.stringify({
+                    'type': 'chat_with_image',
+                    'message': message,
+                    'image': base64Image,
+                }));
+            };
+
+            reader.readAsDataURL(imageFile);
+        } else {
+            // Only send text
+            chatSocket.send(JSON.stringify({
+                'type': 'chat',
+                'message': message,
+            }));
+        }
+
+        form.reset();
+    });
 </script>
 <script src="{% static 'chat.js' %}"></script>
 {% endblock %}

@@ -15,8 +15,10 @@ class GroupUser(models.Model):
         # Composite primary key
         unique_together = (('group', 'member'),)
 
+# Represents messages sent by user in groups
 class MessageGroup(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     content = models.CharField(max_length=2000)
     created_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='images', blank=True)

@@ -21,7 +21,7 @@ def sign_in(request):
             login(request, user)
             return redirect(index)
         else:
-            messages.success(request, ("There was an error while logging, please try again!"))
+            messages.error(request, ("There was an error while logging, please try again!"))
             return redirect('login')
     else:
         form_login = LoginForm()

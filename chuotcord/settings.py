@@ -33,14 +33,19 @@ SECRET_KEY = 'django-insecure-n@h%+ryjd#%!u$t)_6il!!0)-*oh7xnpdzia_$k$ngqzse2nrz
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+'''
+#CSRF configuration
 CSRF_TRUSTED_ORIGINS = [
-    'https://chuotcord.32mine.net'
+    'https://chuotcord.32mine.net',
+    'http://192.168.1.169',
 ]
 CORS_ORIGIN_WHITELIST = [
     'http://chuotcord.32mine.net',
+    'http://192.168.1.169',
 ]
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '27.77.78.138', 'chuotcord.32mine.net']
+'''
+
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '192.168.1.169', 'chuotcord.32mine.net']
 
 # Application definition
 
@@ -90,6 +95,11 @@ TEMPLATES = [
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
+
+# Base url to serve media files
+MEDIA_URL = '/media/'
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 WSGI_APPLICATION = 'chuotcord.wsgi.application'
