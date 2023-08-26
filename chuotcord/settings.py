@@ -45,7 +45,7 @@ CORS_ORIGIN_WHITELIST = [
 ]
 '''
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '192.168.1.169', 'chuotcord.32mine.net']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '192.168.1.10', 'chuotcord.32mine.net']
 
 # Application definition
 

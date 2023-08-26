@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
@@ -49,3 +49,8 @@ def sign_up(request):
             return redirect('home')
         else:
             return render(request, 'authentication/register.html', {'form': form})
+        
+def logout_user(request):
+    logout(request)
+    messages.success(request, 'Logout successfully!')
+    return redirect('home')

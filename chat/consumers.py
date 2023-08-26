@@ -81,14 +81,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         })
 
     async def receive(self, text_data):
+        # Load json requests from client-side
         response = json.loads(text_data)
+        # Fetch data from request
         message_type = response['type']
         message = response['message']
+        # Get group chat from the consumer object
         group = await self.get_group()
+        # IMPLEMENT SECURITY LAYER LATER
         if (True):
+            # Create message object
             message_object = MessageGroup(member=self.user, group=group, content=message)
             image = None
+            # Check if the request type is chat with images
             if (message_type == 'chat_with_image'):
+                # Decode base64 string to byte
                 base64_image = response['image']
                 image_data = base64.b64decode(base64_image.split(',')[1])
 

@@ -5,6 +5,7 @@
     </div>
     <div class="mx-1">
         <p>${data.message}</p>
-        ${data.image ? `<img class="rounded-1 image-fluid" src="${data.image}" alt="Received Image">` : ''}
+        <!--If the image url is not null, display it-->
+        ${data.image ? `<img class="rounded-1" src="${data.image}" alt="Received Image">` : ''}
     </div>
 </div>

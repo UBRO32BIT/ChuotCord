@@ -6,7 +6,7 @@
     <div class="mx-1">
         <p>{{message.content}}</p>
         {% if message.image %}
-        <img class="rounded-1" style="max-width: 75%;" src="{{message.image.url}}" alt="Image by {{message.member.username}}">
+        <img class="rounded-1" src="{{message.image.url}}" alt="Image by {{message.member.username}}">
         {% endif %}
     </div>
 </div>
