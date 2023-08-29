@@ -34,6 +34,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: #6e7779;
 }
+#image-append {
+  display: flex;
+  align-items:start;
+  background-color: rgba(59, 59, 59, 0.26);
+}
 
 #image-append img{
   border-radius: 4%;

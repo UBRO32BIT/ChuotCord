@@ -1,8 +1,12 @@
 {% extends 'chat/base.html' %}
 {% block content %}
 <div class="py-2">
-    <h3>ChuotCord</h3>
-    <a href="{% url 'logout' %}"><h6>Logout</h6></a>
+    <div class="d-flex justify-content-between mx-5">
+        <h3>ChuotCord</h3>
+        <div>
+            <a href="{% url 'logout' %}" class="text-decoration-none"><h6 class="text-danger m-0">Logout</h6></a>
+        </div>
+    </div>
 </div>
 <div class="container">
     {% if messages %}
