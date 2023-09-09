@@ -97,6 +97,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             if (message_type == 'chat_with_image'):
                 # Decode base64 string to byte
                 base64_image = response['image']
+
                 image_data = base64.b64decode(base64_image.split(',')[1])
 
                 # Get the latest message ID from the database
