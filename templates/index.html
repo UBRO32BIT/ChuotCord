@@ -21,10 +21,19 @@
         <h4>Your chat rooms</h4>
     </div>
     {% for group in groups.all %}
-    <div class="py-3">
-        <a href="chat/{{group.group.id}}" class="text-decoration-none text-info">
-            <h4>{{group.group.name}}</h4>
-        </a>
+    <div class="rounded-4 my-4" style="background-color: #213643;">
+        <div class="d-flex align-items-center justify-content-between px-3 py-3">
+            <div class="">
+                <a href="chat/{{group.group.id}}" class="text-decoration-none" style="color: #ffd182;">
+                    <h4 class="m-0">{{group.group.name}}</h4>
+                </a>
+            </div>
+            <div class="">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </div>
+        </div>
+
     </div>
     {% endfor %}
 </div>

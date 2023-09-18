@@ -23,6 +23,7 @@ function removeImage() {
 
 function readURL(input) {
     if (input.files && input.files[0]) {
+        removeImage();
         const imageDiv = document.getElementById('image-append');
         const uploadedImage = imageDiv.querySelector('#uploaded-image');
         //console.log(uploadedImage == null);
