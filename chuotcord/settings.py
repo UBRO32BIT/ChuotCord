@@ -48,6 +48,8 @@ CORS_ORIGIN_WHITELIST = [
 
 ALLOWED_HOSTS = ['.vercel.app', 'localhost', '0.tcp.ap.ngrok.io', 'chuotcord.32mine.net']
 
+LOGIN_URL = '/login/'
+
 # Application definition
 
 INSTALLED_APPS = [

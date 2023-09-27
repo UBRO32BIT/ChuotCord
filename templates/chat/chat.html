@@ -1,20 +1,31 @@
-{% extends 'chat/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
 <div class="container-fluid">
     <div class="row">
         <div id="chat-room" room_code={{group.id}} class="wrapper col-lg-10">
-            <div class="p-1 border-bottom border-secondary d-flex justify-content-between bg-dark align-items-center">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-hashtag px-1" aria-hidden="true"></i>
-                    <div>
-                        <h4 class="m-0">{{group.name}}</h4>
-                    </div>               
+            <div class="p-1 border-bottom border-secondary bg-dark">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-hashtag px-1" aria-hidden="true"></i>
+                        <div>
+                            <h4 class="m-0">{{group.name}}</h4>
+                        </div>               
+                    </div>
+                    <a href="{% url 'home' %}"><i class="fa fa-home mx-2" aria-hidden="true"></i></a>
                 </div>
-                <a href="{% url 'home' %}"><i class="fa fa-home mx-2" aria-hidden="true"></i></a>
-            </div>
-            <div id="messages">
+                {% if messages %}
                 {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div id="messages">
+                {% for message in chat_messages %}
                 {% include 'chat/message/message.html' %}
                 {% endfor %}
                 <div class="anchor"></div>

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h2>Are you sure to delete Group <b>'{{name}}'</b> ?</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+</div>
+{% endblock %}

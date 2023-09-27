@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center">
+    <div>
+        <h2>You got an invitation!</h2>
+        <h6>{{ group_name }}</h6>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Accept">
+        </form>
+    </div>
+
+</div>
+{% endblock %}
