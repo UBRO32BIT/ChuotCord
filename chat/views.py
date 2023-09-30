@@ -1,3 +1,4 @@
+import json
 from django.utils import timezone
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed
@@ -19,10 +20,12 @@ class ChatView(View):
             return HttpResponseNotAllowed("You do not have permission to access this resource.")
         
         group = get_object_or_404(Group, id=group_id)
+        # Get a list of usernames for members in the group with the given ID
+        members = GroupUser.objects.filter(group_id=group_id).values_list('member__username', flat=True)
         context = {
             'chat_messages': MessageGroup.objects.filter(group=group),
             'group': group,
-            'members': GroupUser.objects.filter(group=group)
+            'members': json.dumps(list(members))
         }
         return render(request, "chat/chat.html", context)
     

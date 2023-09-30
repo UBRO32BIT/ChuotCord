@@ -64,3 +64,7 @@
 .custom-label:hover {
   background: #0d45a5;
 }
+
+#offline-users > div {
+  opacity: 0.6;
+}

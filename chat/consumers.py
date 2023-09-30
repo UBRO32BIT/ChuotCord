@@ -30,7 +30,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         message = event['message']
 
         await self.send(text_data=json.dumps({
-            'type': 'player_connect',
+            'type': 'user_connect',
+            'message': message
+        }))
+    async def user_disconnect(self, event):
+        message = event['message']
+
+        await self.send(text_data=json.dumps({
+            'type': 'user_disconnect',
             'message': message
         }))
 
@@ -50,9 +57,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'user_connect',
-                'message': [user.username for user in self.room_connected_users[self.room_name]] #list(self.room_connected_users[self.room_name])
+                'message': self.user.username
             }
         )
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'online_users',
+                'message': [user.username for user in self.room_connected_users[self.room_name]]
+            }))
 
     async def disconnect(self,close_code):
         await self.channel_layer.group_discard(
@@ -63,8 +75,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'user_connect',
-                'message': [user.username for user in self.room_connected_users[self.room_name]] #list(self.room_connected_users[self.room_name])
+                'type': 'user_disconnect',
+                'message': self.user.username
             }
         )
     async def chat_message(self, event):
