@@ -20,6 +20,9 @@ class GroupUser(models.Model):
     class Meta:
         # Composite primary key
         unique_together = (('group', 'member'),)
+        indexes = [
+            models.Index(fields=['member', 'group']),
+        ]
 
 # Represents messages sent by user in groups
 class MessageGroup(models.Model):

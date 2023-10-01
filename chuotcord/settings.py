@@ -23,6 +23,11 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# GET GOOGLE CAPTCHA KEYS FROM .ENV
+RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
+RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
+
 #DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # Quick-start development settings - unsuitable for production
