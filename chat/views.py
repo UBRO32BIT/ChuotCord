@@ -1,4 +1,5 @@
 import json
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed
@@ -8,8 +9,13 @@ from django.views import View
 from .models import MessageGroup, Group, GroupUser, Invite
 from .forms import CreateGroupForm
 
+
 def is_chat_member(user, group_id):
-    return user.is_authenticated and GroupUser.objects.filter(group=group_id, member=user).exists()
+    try:
+        GroupUser.objects.get(group=group_id, member=user)
+        return user.is_authenticated
+    except ObjectDoesNotExist:
+        return False
 
 class ChatView(View):
     def get(self, request, group_id):
@@ -23,7 +29,7 @@ class ChatView(View):
         # Get a list of usernames for members in the group with the given ID
         members = GroupUser.objects.filter(group_id=group_id).values_list('member__username', flat=True)
         context = {
-            'chat_messages': MessageGroup.objects.filter(group=group),
+            'chat_messages': MessageGroup.objects.select_related('member').filter(group=group).order_by('created_at'),
             'group': group,
             'members': json.dumps(list(members))
         }
