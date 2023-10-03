@@ -30,10 +30,11 @@
                 {% endfor %}
                 <div class="anchor"></div>
             </div>
+            <div id="user-typing" class="border-top border-secondary"></div>
             <form id="form" class="custom-form" role="search">
                 <div id="image-append"></div>
                 <div class="input-group input-group-lg">
-                    <input name="message" type="text" class="form-control" placeholder="Message {{group.name}}"
+                    <input name="message" type="text" id="text-input" class="form-control" placeholder="Message {{group.name}}"
                         aria-label="Search">
                     <input type="file" id="file-input" name="image" accept="image/*" onchange="readURL(this);"
                         multiple="false">
@@ -58,6 +59,7 @@
 <script type="text/javascript">
     const totalUsers = new Set(JSON.parse('{{ members|safe }}'))
     let onlineUsers;
+    const userTypingList = new Set();
     const onlineUserListDiv = document.getElementById('online-users');
     const offlineUserListDiv = document.getElementById('offline-users');
 
@@ -95,6 +97,19 @@
             setUserOffline(user);
         }
     }
+    function setUserTyping() {
+        if (userTypingList.size !== 0) {
+            typingDiv = document.querySelector('#user-typing');
+            let users = '';
+            for (const user of userTypingList) {
+                users += user + ', ';
+            }
+            typingDiv.textContent = users + 'is typing....';
+        }
+        else {
+            typingDiv.textContent = '';
+        }
+    }
 
 
     var ws_scheme = window.location.protocol === "https" ? "wss" : "ws";
@@ -123,6 +138,14 @@
                 onlineUsers.add(data.message);
                 setUserOnline(data.message);
             }
+        }
+        else if (data.type === 'user_typing') {
+            userTypingList.add(data.username);
+            setUserTyping()
+        }
+        else if (data.type === 'user_done_typing') {
+            userTypingList.delete(data.username);
+            setUserTyping()
         }
         else if (data.type === 'user_disconnect') {
             onlineUsers.delete(data.message);
@@ -169,6 +192,21 @@
         }
         removeImage();
         form.reset();
+    });
+
+    let timer;
+    const waitTime = 1000;
+    form.addEventListener('keyup', event => {
+        clearTimeout(timer)
+        chatSocket.send(JSON.stringify({
+                'type': 'user_typing',
+            }));
+
+        timer = setTimeout(() => {
+            chatSocket.send(JSON.stringify({
+                    'type': 'user_done_typing',
+                }));
+        }, waitTime);
     });
 </script>
 <script src="{% static 'chat.js' %}"></script>

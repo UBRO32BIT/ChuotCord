@@ -41,6 +41,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             'message': message
         }))
 
+    async def user_typing(self, event):
+        username = event['username']
+
+        await self.send(text_data=json.dumps({
+            'type': 'user_typing',
+            'username': username
+        }))
+    async def user_done_typing(self, event):
+        username = event['username']
+
+        await self.send(text_data=json.dumps({
+            'type': 'user_done_typing',
+            'username': username
+        }))
+
     async def connect(self):
         self.user = self.scope["user"]
         self.room_name = self.scope['url_route']['kwargs']['room_id']
@@ -96,17 +111,33 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Load json requests from client-side
         response = json.loads(text_data)
         # Fetch data from request
-        message_type = response['type']
-        message = response['message']
-        # Get group chat from the consumer object
-        group = await self.get_group()
-        # IMPLEMENT SECURITY LAYER LATER
-        if (True):
+        type = response['type']
+        if (type == 'user_typing'):
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                    {
+                        'type':'user_typing',
+                        'username': self.user.username,
+                    }
+            )
+        elif (type == 'user_done_typing'):
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                    {
+                        'type':'user_done_typing',
+                        'username': self.user.username,
+                    }
+            )
+            
+        elif (type == 'chat' or type == 'chat_with_image'):
+            message = response['message']
+            # Get group chat from the consumer object
+            group = await self.get_group()
             # Create message object
             message_object = MessageGroup(member=self.user, group=group, content=message)
             image = None
             # Check if the request type is chat with images
-            if (message_type == 'chat_with_image'):
+            if (type == 'chat_with_image'):
                 # Decode base64 string to byte
                 base64_image = response['image']
 
@@ -145,5 +176,5 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                         'message':message
                     }
                 )
-        print("Message: ", message, " ", message_object.created_at, " ")
+            print("Message: ", message, " ", message_object.created_at, " ")
 

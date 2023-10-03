@@ -5,7 +5,7 @@ from chat.models import GroupUser, Group
 def index(request):
     if request.user.is_authenticated:
         user = request.user
-        groups = GroupUser.objects.filter(member_id=user.id)
+        groups = GroupUser.objects.select_related('group').filter(member_id=user.id)
         context = {
             "groups": groups
             }
