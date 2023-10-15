@@ -68,3 +68,6 @@
 #offline-users > div {
   opacity: 0.6;
 }
+#user-typing {
+  height: 1.5rem;
+}

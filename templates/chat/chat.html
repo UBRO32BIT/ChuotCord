@@ -30,7 +30,6 @@
                 {% endfor %}
                 <div class="anchor"></div>
             </div>
-            <div id="user-typing" class="border-top border-secondary"></div>
             <form id="form" class="custom-form" role="search">
                 <div id="image-append"></div>
                 <div class="input-group input-group-lg">
@@ -42,6 +41,9 @@
                             aria-hidden="true"></i></label>
                 </div>
             </form>
+            <div class="d-flex align-items-center">
+                <p id="user-typing" class="m-0"></p>
+            </div>
         </div>
         <div class="col-lg-2 d-none d-lg-inline-block border-secondary border-start">
             <div class="pt-3">
@@ -99,15 +101,15 @@
     }
     function setUserTyping() {
         if (userTypingList.size !== 0) {
-            typingDiv = document.querySelector('#user-typing');
+            typingElement = document.querySelector('#user-typing');
             let users = '';
             for (const user of userTypingList) {
                 users += user + ', ';
             }
-            typingDiv.textContent = users + 'is typing....';
+            typingElement.textContent = users + 'is typing....';
         }
         else {
-            typingDiv.textContent = '';
+            typingElement.textContent = '';
         }
     }
 
@@ -153,6 +155,25 @@
         }
     }
     let form = document.getElementById('form')
+    // IMAGE PASTING FROM CLIPBOARD
+    let imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp']; // List of acceptable image MIME types
+    let fileInput = document.getElementById('file-input');
+    window.addEventListener('paste', e => {
+    // Check if any files were pasted
+    if (e.clipboardData && e.clipboardData.items) {
+        // Iterate through clipboard items
+        for (let i = 0; i < e.clipboardData.items.length; i++) {
+            const item = e.clipboardData.items[i];
+
+            // Check if the item is a file and the file type is an image
+            if (item.kind === 'file' && imageMimeTypes.includes(item.type)) {
+                fileInput.files = e.clipboardData.files;
+                readURL(fileInput);
+                return; // Exit the loop if an image is found.
+            }
+        }
+    }
+});
     //FUNCTION TO HANDLE WEBSOCKET SENDING
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
