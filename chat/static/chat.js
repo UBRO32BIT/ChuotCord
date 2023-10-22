@@ -1,4 +1,10 @@
+document.querySelector('emoji-picker')
+  .addEventListener('emoji-click', event => {
+    const messageInput = document.getElementById('text-input');
+    messageInput.value += event.detail.unicode; 
+  });
 
+let pickerVisibility = false; 
 var messageBody = document.querySelector('#messages');
 messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
@@ -55,4 +61,28 @@ function readURL(input) {
             imageDiv.appendChild(removeLink);
         }
     }
+}
+
+const userTypingList = new Set();
+function setUserTyping() {
+    if (userTypingList.size !== 0) {
+        typingElement = document.querySelector('#user-typing');
+        let users = '';
+        for (const user of userTypingList) {
+            users += user + ', ';
+        }
+        typingElement.textContent = users + 'is typing....';
+    }
+    else {
+        typingElement.textContent = '';
+    }
+}
+
+function togglePicker() {
+    const imageDiv = document.getElementById('emoji-picker');
+    if (pickerVisibility) {
+        imageDiv.style.visibility = "hidden";
+    } 
+    else imageDiv.style.visibility = "visible";
+    pickerVisibility = !pickerVisibility;
 }

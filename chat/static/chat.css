@@ -3,7 +3,7 @@
     flex-direction: column; /* relevant part */
     overflow: hidden; /* relevant part */
     font-family: 'Arimo', sans-serif;
-    height: 100vh;
+    height: 100dvh;
 }
 
 #messages {
@@ -51,18 +51,24 @@
 }
 
 .custom-label {
-
-  border: none;
-  background: #084cdf;
-  padding: 10px 20px;
-  border-radius: 10px;
   color: #fff;
   cursor: pointer;
   transition: background .2s ease-in-out;
 }
 
-.custom-label:hover {
+.file-input-div:hover {
   background: #0d45a5;
+}
+
+#user-list {
+  display: flex; /* relevant part */
+  flex-direction: column; /* relevant part */
+  height: 75dvh;
+}
+#invites {
+  display: flex; /* relevant part */
+  flex-direction: column; /* relevant part */
+  height: 21dvh;
 }
 
 #offline-users > div {
@@ -70,4 +76,17 @@
 }
 #user-typing {
   height: 1.5rem;
+}
+
+.text-input-div {
+  width: 100%;
+  font-size: 115%;
+}
+.file-input-div {
+  background: #084cdf;
+}
+
+#emoji-picker {
+  top: -25.5rem;
+  visibility: hidden;
 }

@@ -28,10 +28,12 @@ class ChatView(View):
         group = get_object_or_404(Group, id=group_id)
         # Get a list of usernames for members in the group with the given ID
         members = GroupUser.objects.filter(group_id=group_id).values_list('member__username', flat=True)
+        invites = Invite.objects.filter(group_id=group_id, expiry__isnull=True) | Invite.objects.filter(group_id=group_id, expiry__gt=timezone.now())
         context = {
             'chat_messages': MessageGroup.objects.select_related('member').filter(group=group).order_by('created_at'),
             'group': group,
-            'members': json.dumps(list(members))
+            'members': json.dumps(list(members)),
+            'invites': invites
         }
         return render(request, "chat/chat.html", context)
     
@@ -82,15 +84,15 @@ class AddUserToGroupView(View):
         invite = get_object_or_404(Invite, string=invite_str)
         page = "invite/invite.html"
         
-        if invite.expiry < timezone.now():
-            # Check if the invite has expired
-            page = "invite/invite_expired.html"
-        else:
-            user = request.user
-            group = invite.group
-            if is_chat_member(user, group.pk):
-                messages.error(request, "You are already a member of this group!")
-                return redirect('chat', group_id=group.pk)
+        if invite.expiry is not None:
+            if invite.expiry < timezone.now():
+                # Check if the invite has expired
+                page = "invite/invite_expired.html"
+        user = request.user
+        group = invite.group
+        if is_chat_member(user, group.pk):
+            messages.error(request, "You are already a member of this group!")
+            return redirect('chat', group_id=group.pk)
         
         context = dict()
         context['group_name'] = group.name
@@ -98,17 +100,26 @@ class AddUserToGroupView(View):
     
     def post(self, request, invite_str):
         invite = get_object_or_404(Invite, string=invite_str)
-        if (invite.expiry < timezone.now()):
-            # Check if the invite has expired
-            render(request, "invite/invite_expired.html")
-        else:
-            user = request.user
-            group = invite.group
-            if is_chat_member(user, group.pk):
-                messages.error(request, "You are already a member of this group!")
-                return redirect('chat', group_id=group.pk)
+        if invite.expiry is not None:
+            if (invite.expiry < timezone.now()):
+                # Check if the invite has expired
+                render(request, "invite/invite_expired.html")
+        user = request.user
+        group = invite.group
+        if is_chat_member(user, group.pk):
+            messages.error(request, "You are already a member of this group!")
+            return redirect('chat', group_id=group.pk)
         
         # Add the user to the group
         GroupUser.objects.create(group=group, member=user, alias=None)  # You can set an alias here if needed
 
         return redirect('chat', group_id=group.pk)
+    
+class CreateInvite(View):
+    def post(self, request):
+        user = request.user
+        group_id = request.POST.get('groupId', None)
+        if group_id is not None:
+            group = get_object_or_404(Group, pk=group_id)
+            Invite.objects.create(user=user, group=group)
+            return redirect('chat', group_id=group.pk)
