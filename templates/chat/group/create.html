@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {% render_field form.name type="text" class="form-control" placeholder=form.name.label %}
-        <input type="submit" name="submit" value="Create group">
-    </form>
+    <div class="container text-center">
+        <h1>New chat</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% render_field form.name type="text" class="form-control" placeholder=form.name.label %}
+            <input type="submit" name="submit" value="Create group">
+        </form>
+    </div>
 {% endblock %}
